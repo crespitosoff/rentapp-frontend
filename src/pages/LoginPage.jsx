@@ -1,10 +1,15 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
 function LoginPage() {
   // 1. Creamos estados para guardar el email y la contraseña que el usuario escribe.
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(''); // Un estado para guardar mensajes de error.
+
+  const { login } = useContext(AuthContext); // <-- 4. Obtenemos la función login del contexto
+  const navigate = useNavigate();// <-- 5. Hook para redirigir
 
   // 2. Esta función se ejecutará cuando el usuario envíe el formulario.
   const handleSubmit = async (e) => {
@@ -27,10 +32,17 @@ function LoginPage() {
       if (!response.ok) {
         throw new Error(data.message || 'Error al iniciar sesión');
       }
-      
+
+      // 6. Usamos nuestras nuevas funciones
+      login(data.token); // Guardamos el token en el contexto y localStorage
+      navigate('/'); // Redirigimos al usuario a la página de inicio
+
+
+      /*
       // Si el login es exitoso, recibimos el token.
       console.log('Login exitoso, token:', data.token);
       // Por ahora, solo lo mostramos en la consola. Más adelante lo guardaremos.
+      */
 
     } catch (err) {
       // Si hay un error, lo guardamos en el estado para mostrarlo al usuario.
