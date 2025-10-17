@@ -1,6 +1,11 @@
 import { Link, Outlet } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from './context/AuthContext';
 
 function App() {
+  //OBTÉN el token y la función logout del contexto
+  const { token, logout } = useContext(AuthContext);
+
   // Estilos en línea simples para la barra de navegación
   const navStyle = {
     display: 'flex',
@@ -16,7 +21,14 @@ function App() {
       {/* Barra de Navegación */}
       <nav style={navStyle}>
         <Link to="/">Inicio</Link>
-        <Link to="/login">Login</Link>
+        {/* LÓGICA CONDICIONAL */}
+        {token ? (
+          // Si hay un token (usuario ha iniciado sesión)...
+          <button onClick={logout}>Logout</button>
+        ) : (
+          // Si NO hay un token...
+          <Link to="/login">Login</Link>
+        )}
         {/* Aquí añadiremos más enlaces después */}
       </nav>
 
