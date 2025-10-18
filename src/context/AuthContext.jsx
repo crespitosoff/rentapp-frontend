@@ -9,12 +9,21 @@ export const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
 
+  // ESTADO DE "CARGANDO"
+  const [isLoading, setIsLoading] = useState(true);
+
   // Efecto para cargar el token desde localStorage al iniciar la app
   useEffect(() => {
-    const storedToken = localStorage.getItem('authToken');
-    if (storedToken) {
-      setToken(storedToken);
+    try {
+      const storedToken = localStorage.getItem('authToken');
+      if (storedToken) {
+        setToken(storedToken);
+      }
+    } catch (error) {
+      console.log("Error al leer localStorage", error);
     }
+    // UNA VEZ QUE TERMINAMOS DE REVISAR, DEJAMOS DE CARGAR
+    setIsLoading(false);
   }, []);
 
   // Función para iniciar sesión
@@ -29,9 +38,9 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('authToken');
   };
 
-  // 3. Proveemos el valor (token y funciones) a los componentes hijos
+  // Proveemos el valor (token y funciones) a los componentes hijos
   return (
-    <AuthContext.Provider value={{ token, login, logout }}>
+    <AuthContext.Provider value={{ token, login, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );
