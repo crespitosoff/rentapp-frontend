@@ -26,8 +26,11 @@ function App() {
           // Si hay un token (usuario ha iniciado sesión)...
           <button onClick={logout}>Logout</button>
         ) : (
-          // Si NO hay un token...
+          <>
+          {/* Si NO hay un token... */}
           <Link to="/login">Login</Link>
+          <Link to="/register">Registrarse</Link>
+          </>
         )}
         {/* Aquí añadiremos más enlaces después */}
       </nav>

@@ -6,6 +6,7 @@ import { AuthProvider } from './context/AuthContext';
 import App from './App.jsx';
 import HomePage from './pages/HomePage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
+import RegisterPage from './pages/RegistrerPage.jsx';
 import './index.css';
 import ProfilePage from './pages/ProfilePage.jsx'; // <-- 1. IMPORTA PÁGINA
 import ProtectedRoute from './components/ProtectedRoute.jsx'; // <-- 2. IMPORTA GUARDIA
@@ -16,6 +17,7 @@ const router = createBrowserRouter([
     path: '/',
     element: <App />, // El componente principal o "layout"
     children: [
+      // ... (rutas de home y login)
       {
         index: true, // Esto hace que sea la ruta por defecto (HomePage)
         element: <HomePage />,
@@ -24,7 +26,8 @@ const router = createBrowserRouter([
         path: '/login', // Cuando el usuario vaya a /login...
         element: <LoginPage />, // ...mostramos el componente LoginPage.
       },
-      // Que no se me olvide añadir la ruta de registro aquí cuando la fusiones
+  
+      // Esto es de la rama 'rutas-protegidas'
       {
         element: <ProtectedRoute />, // El guardia envuelve la/s página/s
         children: [
@@ -34,6 +37,12 @@ const router = createBrowserRouter([
           }
         ]
       }
+                                   
+      // Esto es de la rama 'pagina-registro' (que ya está en main)
+      {
+        path: '/register',
+        element: <RegisterPage />,
+      },
     ],
   },
 ]);
