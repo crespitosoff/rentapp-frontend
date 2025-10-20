@@ -1,5 +1,3 @@
-// src/context/AuthContext.jsx
-
 import React, { createContext, useState, useEffect } from 'react';
 
 // 1. Creamos el contexto
