@@ -7,6 +7,7 @@ import App from './App.jsx';
 import HomePage from './pages/HomePage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegistrerPage.jsx';
+import InmuebleDetailPage from './pages/InmuebleDetailPage.jsx';
 import './index.css';
 import ProfilePage from './pages/ProfilePage.jsx'; // <-- 1. IMPORTA PÁGINA
 import ProtectedRoute from './components/ProtectedRoute.jsx'; // <-- 2. IMPORTA GUARDIA
@@ -36,13 +37,20 @@ const router = createBrowserRouter([
             element: <ProfilePage />, // ...se mostrará esta página (si pasa el guardia)
           }
         ]
-      }
+      },
                                    
       // Esto es de la rama 'pagina-registro' (que ya está en main)
       {
         path: '/register',
         element: <RegisterPage />,
       },
+
+      // Ruta dinámica para mostrar detalles de un inmueble
+      // El ':id' le dice a React Router que esta parte de la URL es una variable
+      {
+        path: '/inmueble/:id',
+        element: <InmuebleDetailPage />,
+      }
     ],
   },
 ]);
