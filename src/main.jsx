@@ -8,6 +8,8 @@ import HomePage from './pages/HomePage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegistrerPage.jsx';
 import './index.css';
+import ProfilePage from './pages/ProfilePage.jsx'; // <-- 1. IMPORTA PÁGINA
+import ProtectedRoute from './components/ProtectedRoute.jsx'; // <-- 2. IMPORTA GUARDIA
 
 // Aquí definimos todas las rutas de nuestra aplicación
 const router = createBrowserRouter([
@@ -24,6 +26,19 @@ const router = createBrowserRouter([
         path: '/login', // Cuando el usuario vaya a /login...
         element: <LoginPage />, // ...mostramos el componente LoginPage.
       },
+  
+      // Esto es de la rama 'rutas-protegidas'
+      {
+        element: <ProtectedRoute />, // El guardia envuelve la/s página/s
+        children: [
+          {
+            path: '/profile', // Cuando se pida /profile...
+            element: <ProfilePage />, // ...se mostrará esta página (si pasa el guardia)
+          }
+        ]
+      }
+                                   
+      // Esto es de la rama 'pagina-registro' (que ya está en main)
       {
         path: '/register',
         element: <RegisterPage />,
