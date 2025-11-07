@@ -11,6 +11,7 @@ import InmuebleDetailPage from './pages/InmuebleDetailPage.jsx';
 import './index.css';
 import ProfilePage from './pages/ProfilePage.jsx'; // <-- 1. IMPORTA PÁGINA
 import ProtectedRoute from './components/ProtectedRoute.jsx'; // <-- 2. IMPORTA GUARDIA
+import CreateInmueblePage from './pages/CreateInmueblePage.jsx'; // <-- 1. IMPORTA
 
 // Aquí definimos todas las rutas de nuestra aplicación
 const router = createBrowserRouter([
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
           {
             path: '/profile', // Cuando se pida /profile...
             element: <ProfilePage />, // ...se mostrará esta página (si pasa el guardia)
+          },
+          {
+            path: '/crear-inmueble', // <-- LA NUEVA RUTA
+            element: <CreateInmueblePage />,
           }
         ]
       },
