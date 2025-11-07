@@ -23,8 +23,12 @@ function App() {
         <Link to="/">Inicio</Link>
         {/* LÓGICA CONDICIONAL */}
         {token ? (
-          // Si hay un token (usuario ha iniciado sesión)...
+          <>
+          <Link to="/crear-inmueble">Publicar Inmueble</Link>
+          <Link to="/profile">Mi Perfil</Link>
+          {/* Si hay un token (usuario ha iniciado sesión)... */}
           <button onClick={logout}>Logout</button>
+          </>
         ) : (
           <>
           {/* Si NO hay un token... */}
