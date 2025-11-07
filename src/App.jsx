@@ -38,6 +38,11 @@ function App() {
             )}
 
             <button onClick={logout}>Logout</button>
+          <>
+          <Link to="/crear-inmueble">Publicar Inmueble</Link>
+          <Link to="/profile">Mi Perfil</Link>
+          {/* Si hay un token (usuario ha iniciado sesión)... */}
+          <button onClick={logout}>Logout</button>
           </>
         ) : (
           // --- USUARIO DESCONECTADO ---

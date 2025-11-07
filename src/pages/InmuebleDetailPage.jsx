@@ -1,5 +1,3 @@
-// src/pages/InmuebleDetailPage.jsx
-
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom'; // <-- Importante: Hook para leer parámetros de la URL
 
