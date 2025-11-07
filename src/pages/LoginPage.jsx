@@ -34,7 +34,7 @@ function LoginPage() {
       }
 
       // 6. Usamos nuestras nuevas funciones
-      login(data.token); // Guardamos el token en el contexto y localStorage
+      login(data.token, data.rol); // Guardamos el token en el contexto y localStorage
       navigate('/'); // Redirigimos al usuario a la página de inicio
 
 
