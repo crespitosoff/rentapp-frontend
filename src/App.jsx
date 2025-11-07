@@ -4,7 +4,7 @@ import { AuthContext } from './context/AuthContext';
 
 function App() {
   //OBTÉN el token y la función logout del contexto
-  const { token, logout } = useContext(AuthContext);
+  const { token, rol, logout } = useContext(AuthContext);
 
   // Estilos en línea simples para la barra de navegación
   const navStyle = {
@@ -23,9 +23,24 @@ function App() {
         <Link to="/">Inicio</Link>
         {/* LÓGICA CONDICIONAL */}
         {token ? (
+          // --- USUARIO LOGGEADO ---
           // Si hay un token (usuario ha iniciado sesión)...
-          <button onClick={logout}>Logout</button>
+          <>
+            <Link to="/profile">Mi Perfil</Link>
+
+            {/* 2. RENDERIZADO CONDICIONAL POR ROL */}
+            {rol === 'arrendador' && (
+              <Link to="/crear-inmueble">Publicar Inmueble</Link>
+            )}
+
+            {rol === 'arrendatario' && (
+              <Link to="/mis-favoritos">Mis Favoritos</Link>
+            )}
+
+            <button onClick={logout}>Logout</button>
+          </>
         ) : (
+          // --- USUARIO DESCONECTADO ---
           <>
           {/* Si NO hay un token... */}
           <Link to="/login">Login</Link>
