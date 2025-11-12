@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
     // 2. Al cargar, lee AMBOS datos de localStorage
     const storedToken = localStorage.getItem('authToken');
     const storedRol = localStorage.getItem('authRol'); // <-- LEE EL ROL
-    
+
     try {
       if (storedToken && storedRol) {
         setToken(storedToken);
@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(false);
   }, []);
 
-// 3. Actualiza el LOGIN para aceptar y guardar el rol
+  // 3. Actualiza el LOGIN para aceptar y guardar el rol
   const login = (newToken, newRol) => {
     setToken(newToken);
     setRol(newRol);

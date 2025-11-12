@@ -27,7 +27,6 @@ function App() {
           // Si hay un token (usuario ha iniciado sesión)...
           <>
             <Link to="/profile">Mi Perfil</Link>
-
             {/* 2. RENDERIZADO CONDICIONAL POR ROL */}
             {rol === 'arrendador' && (
               <Link to="/crear-inmueble">Publicar Inmueble</Link>
@@ -36,20 +35,16 @@ function App() {
             {rol === 'arrendatario' && (
               <Link to="/mis-favoritos">Mis Favoritos</Link>
             )}
-
+            
+            {/* Si hay un token (usuario ha iniciado sesión)... */}
             <button onClick={logout}>Logout</button>
-          <>
-          <Link to="/crear-inmueble">Publicar Inmueble</Link>
-          <Link to="/profile">Mi Perfil</Link>
-          {/* Si hay un token (usuario ha iniciado sesión)... */}
-          <button onClick={logout}>Logout</button>
           </>
         ) : (
           // --- USUARIO DESCONECTADO ---
           <>
-          {/* Si NO hay un token... */}
-          <Link to="/login">Login</Link>
-          <Link to="/register">Registrarse</Link>
+            {/* Si NO hay un token... */}
+            <Link to="/login">Login</Link>
+            <Link to="/register">Registrarse</Link>
           </>
         )}
         {/* Aquí añadiremos más enlaces después */}
