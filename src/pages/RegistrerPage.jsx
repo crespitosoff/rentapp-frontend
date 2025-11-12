@@ -1,3 +1,5 @@
+// src/pages/RegisterPage.jsx
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,6 +14,7 @@ function RegisterPage() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  // Esta función ya es perfecta, maneja todos los campos
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -19,6 +22,7 @@ function RegisterPage() {
     });
   };
 
+  // Esta función ya es perfecta, envía todo el 'formData'
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -66,6 +70,17 @@ function RegisterPage() {
           <label>Contraseña:</label>
           <input type="password" name="password" onChange={handleChange} required />
         </div>
+
+        {/* --- ÚNICO CAMBIO (AÑADIR SELECTOR DE ROL) --- */}
+        <div>
+          <label>Quiero registrarme como:</label>
+          <select name="rol" value={formData.rol} onChange={handleChange}>
+            <option value="arrendatario">Inquilino (Busco arriendo)</option>
+            <option value="arrendador">Propietario (Ofrezco arriendo)</option>
+          </select>
+        </div>
+        {/* --- FIN DEL CAMBIO --- */}
+
         <button type="submit">Registrarse</button>
       </form>
       {error && <p style={{ color: 'red' }}>{error}</p>}
