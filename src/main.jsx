@@ -9,10 +9,11 @@ import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegistrerPage.jsx';
 import InmuebleDetailPage from './pages/InmuebleDetailPage.jsx';
 import './index.css';
-import ProfilePage from './pages/ProfilePage.jsx'; // <-- 1. IMPORTA PÁGINA
-import ProtectedRoute from './components/ProtectedRoute.jsx'; // <-- 2. IMPORTA GUARDIA
-import RoleProtectedRoute from './components/RoleProtectedRoute.jsx'; // <-- 1. IMPORTA EL NUEVO
+import ProfilePage from './pages/ProfilePage.jsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx'; // <-- IMPORTA GUARDIA
+import RoleProtectedRoute from './components/RoleProtectedRoute.jsx';
 import CreateInmueblePage from './pages/CreateInmueblePage.jsx';
+import MyInmueblesPage from './pages/MyInmueblesPage.jsx';
 
 // Aquí definimos todas las rutas de nuestra aplicación
 const router = createBrowserRouter([
@@ -51,8 +52,11 @@ const router = createBrowserRouter([
           {
             path: '/crear-inmueble',
             element: <CreateInmueblePage />,
+          },
+          {
+            path: '/mis-inmuebles', // <-- NUEVA RUTA
+            element: <MyInmueblesPage />,
           }
-          // ... (ej: /mis-inmuebles)
         ]
       },
 
