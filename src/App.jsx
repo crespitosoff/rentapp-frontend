@@ -29,13 +29,17 @@ function App() {
             <Link to="/profile">Mi Perfil</Link>
             {/* 2. RENDERIZADO CONDICIONAL POR ROL */}
             {rol === 'arrendador' && (
-              <Link to="/crear-inmueble">Publicar Inmueble</Link>
+              <>
+                <Link to="/crear-inmueble">Publicar Inmueble</Link>
+                {/* --- NUEVO ENLACE --- */}
+                <Link to="/mis-inmuebles">Mis Inmuebles</Link>
+              </>
             )}
 
             {rol === 'arrendatario' && (
               <Link to="/mis-favoritos">Mis Favoritos</Link>
             )}
-            
+
             {/* Si hay un token (usuario ha iniciado sesión)... */}
             <button onClick={logout}>Logout</button>
           </>
