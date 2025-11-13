@@ -1,80 +1,105 @@
 // src/pages/MyInmueblesPage.jsx
 
 import { useState, useEffect, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // <-- Importa useNavigate
 import { AuthContext } from '../context/AuthContext';
 
 function MyInmueblesPage() {
-    // Estados para los datos, carga y errores
+    // ... (estados de inmuebles, loading, error, token)
     const [inmuebles, setInmuebles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
-    // Obtenemos el token del contexto para la autenticación
     const { token } = useContext(AuthContext);
+    const navigate = useNavigate(); // <-- Hook para redirigir
 
     useEffect(() => {
         const fetchMyInmuebles = async () => {
             try {
-                // Hacemos el fetch a la NUEVA ruta protegida
                 const response = await fetch('http://localhost:3000/api/inmuebles/propios', {
-                    headers: {
-                        // Enviamos el token para la autorización
-                        'Authorization': `Bearer ${token}`
-                    }
+                    headers: { 'Authorization': `Bearer ${token}` }
                 });
-
                 if (!response.ok) {
                     const errData = await response.json();
                     throw new Error(errData.message || 'Error al cargar los inmuebles');
                 }
-
                 const data = await response.json();
-                setInmuebles(data); // Guardamos los datos en el estado
-
+                setInmuebles(data);
             } catch (err) {
-                setError(err.message); // Guardamos el error
+                setError(err.message);
             } finally {
-                setLoading(false); // Dejamos de cargar
+                setLoading(false);
             }
         };
-
-        // Solo hacemos el fetch si tenemos un token
         if (token) {
             fetchMyInmuebles();
         }
-    }, [token]); // El array de dependencias incluye el token
+    }, [token]);
 
-    // Lógica de renderizado
-    if (loading) {
-        return <div>Cargando mis inmuebles...</div>;
-    }
+    // --- NUEVA FUNCIÓN PARA ELIMINAR ---
+    const handleDelete = async (inmuebleId) => {
+        // Pedimos confirmación antes de un borrado destructivo
+        if (!window.confirm('¿Estás seguro de que quieres eliminar este inmueble? Esta acción no se puede deshacer.')) {
+            return; // Si el usuario cancela, no hacemos nada
+        }
 
-    if (error) {
-        return <div>Error: {error}</div>;
-    }
+        try {
+            const response = await fetch(`http://localhost:3000/api/inmuebles/${inmuebleId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}` // Autenticación
+                }
+            });
+
+            if (!response.ok) {
+                // Si el backend da error (ej: 403, 404, 500)
+                const errData = await response.json();
+                throw new Error(errData.message || 'Error al eliminar el inmueble');
+            }
+
+            // ¡Éxito! Actualizamos la UI al instante
+            // Filtramos la lista de inmuebles, quitando el que acabamos de borrar
+            setInmuebles(inmuebles.filter(inm => inm.inmueble_id !== inmuebleId));
+
+        } catch (err) {
+            setError(err.message); // Mostramos cualquier error
+        }
+    };
+
+    // Lógica de renderizado (sin cambios)
+    if (loading) { /* ... */ }
+    if (error) { /* ... */ }
 
     return (
         <div>
             <h1>Mis Inmuebles Publicados</h1>
+            {error && <p style={{ color: 'red' }}>Error: {error}</p>} {/* Mostramos el error de borrado */}
             {inmuebles.length === 0 ? (
                 <p>Aún no has publicado ningún inmueble. <Link to="/crear-inmueble">¡Publica el primero!</Link></p>
             ) : (
                 <div>
                     {inmuebles.map(inmueble => (
-                        // --- INICIO DEL CAMBIO ---
-                        <Link
-                            to={`/inmueble/${inmueble.inmueble_id}`}
-                            key={inmueble.inmueble_id} // La 'key' se mueve al elemento padre
-                            style={{ textDecoration: 'none', color: 'inherit' }} // Estilo para que no parezca un link
-                        >
-                            <div style={cardStyle}> {/* La 'key' se quita de aquí */}
+                        // Usamos un <div> como contenedor padre
+                        <div key={inmueble.inmueble_id} style={cardStyle}>
+                            <Link
+                                to={`/inmueble/${inmueble.inmueble_id}`}
+                                style={{ textDecoration: 'none', color: 'inherit' }}
+                            >
                                 <h3>{inmueble.titulo}</h3>
                                 <p>{inmueble.descripcion}</p>
                                 <p><strong>Precio:</strong> ${inmueble.precio_mensual} / mes</p>
-                                {/* Aquí podríamos añadir botones de Editar/Eliminar en el futuro */}
+                            </Link>
+
+                            {/* --- AÑADIMOS LOS BOTONES --- */}
+                            <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+                                <Link to={`/mis-inmuebles/editar/${inmueble.inmueble_id}`}>
+                                    <button>Editar</button>
+                                </Link>
+                                <button onClick={() => handleDelete(inmueble.inmueble_id)} style={{ backgroundColor: 'red' }}>
+                                    Eliminar
+                                </button>
                             </div>
-                        </Link>
+                            {/* --- FIN DE LOS BOTONES --- */}
+                        </div>
                     ))}
                 </div>
             )}

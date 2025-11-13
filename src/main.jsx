@@ -14,6 +14,7 @@ import ProtectedRoute from './components/ProtectedRoute.jsx'; // <-- IMPORTA GUA
 import RoleProtectedRoute from './components/RoleProtectedRoute.jsx';
 import CreateInmueblePage from './pages/CreateInmueblePage.jsx';
 import MyInmueblesPage from './pages/MyInmueblesPage.jsx';
+import EditInmueblePage from './pages/EditInmueblePage.jsx';
 
 // Aquí definimos todas las rutas de nuestra aplicación
 const router = createBrowserRouter([
@@ -21,64 +22,41 @@ const router = createBrowserRouter([
     path: '/',
     element: <App />, // El componente principal o "layout"
     children: [
-      // ... (rutas públicas: home, login, register, detalle...)
+      // ... (tus rutas públicas: index, login, register, /inmueble/:id) ...
+      { index: true, element: <HomePage /> },
+      { path: '/login', element: <LoginPage /> },
+      { path: '/register', element: <RegisterPage /> },
+      { path: '/inmueble/:id', element: <InmuebleDetailPage /> },
 
       // --- Rutas para CUALQUIER usuario conectado ---
       {
-        index: true, // Esto hace que sea la ruta por defecto (HomePage)
-        element: <HomePage />,
-      },
-      {
-        path: '/login', // Cuando el usuario vaya a /login...
-        element: <LoginPage />, // ...mostramos el componente LoginPage.
-      },
-
-      // Esto es de la rama 'rutas-protegidas'
-      {
-        element: <ProtectedRoute />, // El guardia envuelve la/s página/s
+        element: <ProtectedRoute />,
         children: [
-          {
-            path: '/profile', // Cuando se pida /profile...
-            element: <ProfilePage />, // ...se mostrará esta página (si pasa el guardia)
-            // { path: '/mis-favoritos', element: <FavoritesPage /> }
-          },
+          { path: '/profile', element: <ProfilePage /> },
         ]
       },
 
       // --- Rutas SOLO para 'arrendador' ---
       {
-        element: <RoleProtectedRoute allowedRole="arrendador" />, // <-- 2. USA EL NUEVO GUARDIA
+        element: <RoleProtectedRoute allowedRole="arrendador" />,
         children: [
+          { path: '/crear-inmueble', element: <CreateInmueblePage /> },
+          { path: '/mis-inmuebles', element: <MyInmueblesPage /> },
+          // --- 2. AÑADE LA NUEVA RUTA DE EDICIÓN ---
           {
-            path: '/crear-inmueble',
-            element: <CreateInmueblePage />,
-          },
-          {
-            path: '/mis-inmuebles', // <-- NUEVA RUTA
-            element: <MyInmueblesPage />,
+            path: '/mis-inmuebles/editar/:id',
+            element: <EditInmueblePage />
           }
         ]
       },
 
-      // Esto es de la rama 'pagina-registro' (que ya está en main)
-      {
-        path: '/register',
-        element: <RegisterPage />,
-      },
-
-      // Ruta dinámica para mostrar detalles de un inmueble
-      // El ':id' le dice a React Router que esta parte de la URL es una variable
-      {
-        path: '/inmueble/:id',
-        element: <InmuebleDetailPage />,
-      }
     ],
   },
 ]);
 
+// ... (tu ReactDOM.createRoot sin cambios)
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    {/* 2. ENVOLVER LA APP */}
     <AuthProvider>
       <RouterProvider router={router} />
     </AuthProvider>
