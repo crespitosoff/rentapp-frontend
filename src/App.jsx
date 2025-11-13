@@ -1,61 +1,58 @@
 import { Link, Outlet } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from './context/AuthContext';
+import styles from './App.module.css'; // <-- 1. Importa el Módulo de CSS
 
 function App() {
   //OBTÉN el token y la función logout del contexto
   const { token, rol, logout } = useContext(AuthContext);
 
-  // Estilos en línea simples para la barra de navegación
-  const navStyle = {
-    display: 'flex',
-    gap: '2rem',
-    justifyContent: 'center',
-    paddingBottom: '2rem',
-    borderBottom: '1px solid #555',
-    marginBottom: '2rem',
-  };
+  // 2. ¡Ya no necesitamos 'navStyle'! Lo borramos.
 
   return (
-    <div>
+    <div className={styles.appContainer}> {/* 3. Usa la clase del contenedor principal */}
+
       {/* Barra de Navegación */}
-      <nav style={navStyle}>
-        <Link to="/">Inicio</Link>
-        {/* LÓGICA CONDICIONAL */}
-        {token ? (
-          // --- USUARIO LOGGEADO ---
-          // Si hay un token (usuario ha iniciado sesión)...
-          <>
-            <Link to="/profile">Mi Perfil</Link>
-            {/* 2. RENDERIZADO CONDICIONAL POR ROL */}
-            {rol === 'arrendador' && (
-              <>
-                <Link to="/crear-inmueble">Publicar Inmueble</Link>
-                {/* --- NUEVO ENLACE --- */}
-                <Link to="/mis-inmuebles">Mis Inmuebles</Link>
-              </>
-            )}
+      <nav className={styles.navbar}> {/* 4. Usa la clase de la barra */}
 
-            {rol === 'arrendatario' && (
-              <Link to="/mis-favoritos">Mis Favoritos</Link>
-            )}
+        {/* 5. Añadimos un Logo/Título */}
+        <Link to="/" className={styles.navLogo}>
+          RentApp
+        </Link>
 
-            {/* Si hay un token (usuario ha iniciado sesión)... */}
-            <button onClick={logout}>Logout</button>
-          </>
-        ) : (
-          // --- USUARIO DESCONECTADO ---
-          <>
-            {/* Si NO hay un token... */}
-            <Link to="/login">Login</Link>
-            <Link to="/register">Registrarse</Link>
-          </>
-        )}
-        {/* Aquí añadiremos más enlaces después */}
+        {/* 6. Agrupamos los enlaces */}
+        <div className={styles.navLinks}>
+          {/* LÓGICA CONDICIONAL */}
+          {token ? (
+            // --- USUARIO LOGGEADO ---
+            <>
+              <Link to="/profile">Mi Perfil</Link>
+              {/* 2. RENDERIZADO CONDICIONAL POR ROL */}
+              {rol === 'arrendador' && (
+                <>
+                  <Link to="/crear-inmueble">Publicar Inmueble</Link>
+                  <Link to="/mis-inmuebles">Mis Inmuebles</Link>
+                </>
+              )}
+
+              {rol === 'arrendatario' && (
+                <Link to="/mis-favoritos">Mis Favoritos</Link>
+              )}
+
+              <button onClick={logout}>Logout</button>
+            </>
+          ) : (
+            // --- USUARIO DESCONECTADO ---
+            <>
+              <Link to="/login">Login</Link>
+              <Link to="/register">Registrarse</Link>
+            </>
+          )}
+        </div>
       </nav>
 
       {/* Contenido de la página actual */}
-      <main>
+      <main className={styles.mainContent}> {/* 7. Usa la clase del contenido */}
         <Outlet /> {/* <-- Aquí se renderizarán HomePage, LoginPage, etc. */}
       </main>
     </div>

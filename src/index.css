@@ -1,12 +1,18 @@
-/* Estilos base para un look moderno */
+/* 1. Variables de color (opcional, pero buena práctica) */
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* Colores */
+  --color-background: #f4f7f6;
+  /* Un gris muy claro para el fondo */
+  --color-text: #2c3e50;
+  /* Un gris oscuro para el texto */
+  --color-primary: #f07427;
+  /* Nuestro naranja de marca */
+  --color-white: #ffffff;
+  --color-border: #e0e0e0;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -14,18 +20,47 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* 2. Reseteo y estilos base del body */
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
+  padding: 0;
+  background-color: var(--color-background);
+  color: var(--color-text);
   min-height: 100vh;
 }
 
+/* 3. Estilos base para enlaces (links) */
+a {
+  font-weight: 500;
+  color: var(--color-primary);
+  text-decoration: inherit;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: #c95f1d;
+  /* Un naranja más oscuro al pasar el ratón */
+}
+
+/* 4. Estilos base para botones */
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+button:hover {
+  background-color: #c95f1d;
+}
+
+/* 5. Quitamos los estilos por defecto de #root */
 #root {
   width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
 }
