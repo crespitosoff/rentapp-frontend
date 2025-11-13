@@ -1,0 +1,70 @@
+/* Contenedor principal de toda la aplicación */
+.appContainer {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* La barra de navegación (Header) */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    /* Espacia el logo de los links */
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: var(--color-white);
+    border-bottom: 1px solid var(--color-border);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* El logo/título de la app */
+.navLogo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    text-decoration: none;
+    /* Quitamos subrayado del Link */
+}
+
+/* Contenedor para los enlaces de navegación */
+.navLinks {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+/* Estilo de los links de la barra */
+.navLinks a {
+    text-decoration: none;
+    color: var(--color-text);
+    font-weight: 500;
+}
+
+.navLinks a:hover {
+    color: var(--color-primary);
+}
+
+/* Estilo del botón de Logout */
+.navLinks button {
+    background-color: transparent;
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    padding: 0.5em 1em;
+}
+
+.navLinks button:hover {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    border-color: var(--color-primary);
+}
+
+/* El contenedor del contenido principal (donde se carga el Outlet) */
+.mainContent {
+    width: 100%;
+    max-width: 1280px;
+    /* Centra el contenido */
+    margin: 0 auto;
+    padding: 2rem;
+    flex-grow: 1;
+    /* Asegura que ocupe el espacio restante */
+}
