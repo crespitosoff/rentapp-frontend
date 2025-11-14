@@ -15,6 +15,7 @@ import RoleProtectedRoute from './components/RoleProtectedRoute.jsx';
 import CreateInmueblePage from './pages/CreateInmueblePage.jsx';
 import MyInmueblesPage from './pages/MyInmueblesPage.jsx';
 import EditInmueblePage from './pages/EditInmueblePage.jsx';
+import MyFavoritesPage from './pages/MyFavoritesPage.jsx';
 
 // Aquí definimos todas las rutas de nuestra aplicación
 const router = createBrowserRouter([
@@ -22,7 +23,6 @@ const router = createBrowserRouter([
     path: '/',
     element: <App />, // El componente principal o "layout"
     children: [
-      // ... (tus rutas públicas: index, login, register, /inmueble/:id) ...
       { index: true, element: <HomePage /> },
       { path: '/login', element: <LoginPage /> },
       { path: '/register', element: <RegisterPage /> },
@@ -33,6 +33,20 @@ const router = createBrowserRouter([
         element: <ProtectedRoute />,
         children: [
           { path: '/profile', element: <ProfilePage /> },
+          // --- 2. AÑADE LA RUTA DE FAVORITOS (PROTEGIDA) ---
+          // La ponemos aquí porque el 'arrendatario' también pasa por 'ProtectedRoute'
+          { path: '/mis-favoritos', element: <MyFavoritesPage /> }
+          // (Nota: RoleProtectedRoute no es necesario si ProtectedRoute ya cubre arrendatarios)
+          // (Para ser más estrictos, la moveremos)
+        ]
+      },
+
+      // --- Rutas SOLO para 'arrendatario' ---
+      // (¡Es mejor mover 'mis-favoritos' aquí para ser explícitos!)
+      {
+        element: <RoleProtectedRoute allowedRole="arrendatario" />,
+        children: [
+          { path: '/mis-favoritos', element: <MyFavoritesPage /> }
         ]
       },
 
@@ -42,11 +56,7 @@ const router = createBrowserRouter([
         children: [
           { path: '/crear-inmueble', element: <CreateInmueblePage /> },
           { path: '/mis-inmuebles', element: <MyInmueblesPage /> },
-          // --- 2. AÑADE LA NUEVA RUTA DE EDICIÓN ---
-          {
-            path: '/mis-inmuebles/editar/:id',
-            element: <EditInmueblePage />
-          }
+          { path: '/mis-inmuebles/editar/:id', element: <EditInmueblePage /> }
         ]
       },
 
