@@ -1,15 +1,24 @@
 // src/pages/HomePage.jsx
 
-import { useState, useEffect, useContext } from 'react'; // <-- Importa useContext
-import { Link } from 'react-router-dom';
+import { useState, useEffect, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom'; // <-- 1. Importa useNavigate
 import styles from './HomePage.module.css';
-import { AuthContext } from '../context/AuthContext'; // <-- Importa AuthContext
+import { AuthContext } from '../context/AuthContext';
 
 function HomePage() {
   const [inmuebles, setInmuebles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { token, rol } = useContext(AuthContext); // <-- Obtén el token y el rol
+
+  // 2. Obtenemos todo lo que necesitamos del cerebro
+  const {
+    token,
+    rol,
+    favoritos,
+    addFavorito,
+    removeFavorito
+  } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // ... (tu fetchInmuebles no cambia)
@@ -25,38 +34,7 @@ function HomePage() {
     fetchInmuebles();
   }, []);
 
-  // --- FUNCIÓN PARA GUARDAR FAVORITO ---
-  const handleSaveClick = async (inmuebleId, e) => {
-    // Detenemos la propagación para que no se active el Link de la tarjeta
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (!token) {
-      alert('Por favor, inicia sesión para guardar favoritos.');
-      return;
-    }
-
-    try {
-      const response = await fetch('http://localhost:3000/api/favoritos', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ inmueble_id: inmuebleId })
-      });
-
-      if (!response.ok) {
-        throw new Error('No se pudo guardar el favorito');
-      }
-
-      alert('¡Guardado en favoritos!');
-      // (En una v2, cambiaríamos el estado del botón a "Guardado")
-
-    } catch (err) {
-      alert(err.message);
-    }
-  };
+  // 3. ¡ELIMINAMOS handleSaveClick! Ya no se necesita.
 
   if (loading) { /* ... */ }
   if (error) { /* ... */ }
@@ -65,33 +43,60 @@ function HomePage() {
     <div>
       <h1>Inmuebles Disponibles</h1>
       <div className={styles.inmueblesGrid}>
-        {inmuebles.map(inmueble => (
-          <Link
-            to={`/inmueble/${inmueble.inmueble_id}`}
-            key={inmueble.inmueble_id}
-            className={styles.cardLink}
-          >
-            <div className={styles.card}>
-              <div className={styles.cardImage}>
-                {/* --- 5. AÑADIMOS EL BOTÓN DE GUARDAR --- */}
-                {/* Solo mostramos el botón si es 'arrendatario' */}
-                {rol === 'arrendatario' && (
-                  <button
-                    className={styles.saveButton} // (Añadiremos este estilo)
-                    onClick={(e) => handleSaveClick(inmueble.inmueble_id, e)}
-                  >
-                    Guardar
-                  </button>
-                )}
+        {inmuebles.map(inmueble => {
+          // 4. LÓGICA DEL BOTÓN INTELIGENTE
+          // Comprueba si este inmueble YA está en la lista de favoritos del contexto
+          const isFavorito = favoritos.find(fav => fav.inmueble_id === inmueble.inmueble_id);
+
+          // 5. Lógica del clic
+          const handleFavClick = (e) => {
+            e.preventDefault(); // Detiene la navegación del Link
+            e.stopPropagation();
+
+            if (!token) {
+              // ¡Tu idea! Incita al login
+              navigate('/login');
+              return;
+            }
+
+            // Si ya es favorito, lo quita. Si no, lo añade.
+            if (isFavorito) {
+              removeFavorito(inmueble.inmueble_id);
+            } else {
+              addFavorito(inmueble); // Pasamos el objeto 'inmueble' completo
+            }
+          };
+
+          return (
+            <Link
+              to={`/inmueble/${inmueble.inmueble_id}`}
+              key={inmueble.inmueble_id}
+              className={styles.cardLink}
+            >
+              <div className={styles.card}>
+                <div className={styles.cardImage}>
+                  {/* 6. LÓGICA DE MOSTRAR BOTÓN */}
+                  {/* Mostramos el botón si NO eres arrendador */}
+                  {rol !== 'arrendador' && (
+                    <button
+                      className={styles.saveButton}
+                      onClick={handleFavClick}
+                      // Cambiamos el estilo si es favorito
+                      style={{ backgroundColor: isFavorito ? '#aa2a2a' : '' }}
+                    >
+                      {isFavorito ? 'Quitar' : 'Guardar'}
+                    </button>
+                  )}
+                </div>
+                <div className={styles.cardContent}>
+                  <h3>{inmueble.titulo}</h3>
+                  <p>{inmueble.descripcion}</p>
+                  <p className={styles.price}>${inmueble.precio_mensual} / mes</p>
+                </div>
               </div>
-              <div className={styles.cardContent}>
-                <h3>{inmueble.titulo}</h3>
-                <p>{inmueble.descripcion}</p>
-                <p className={styles.price}>${inmueble.precio_mensual} / mes</p>
-              </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

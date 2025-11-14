@@ -13,8 +13,8 @@ function LoginPage() {
 
   // 2. Esta función se ejecutará cuando el usuario envíe el formulario.
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Evita que la página se recargue al enviar el formulario.
-    setError(''); // Limpiamos cualquier error anterior.
+    e.preventDefault();
+    setError('');
 
     try {
       // 3. Hacemos la petición POST a nuestro endpoint de login en el backend.
@@ -34,15 +34,9 @@ function LoginPage() {
       }
 
       // 6. Usamos nuestras nuevas funciones
-      login(data.token, data.rol); // Guardamos el token en el contexto y localStorage
+      // ¡Añadimos 'await' para esperar que el login (y el fetch de favoritos) termine!
+      await login(data.token, data.rol);
       navigate('/'); // Redirigimos al usuario a la página de inicio
-
-
-      /*
-      // Si el login es exitoso, recibimos el token.
-      console.log('Login exitoso, token:', data.token);
-      // Por ahora, solo lo mostramos en la consola. Más adelante lo guardaremos.
-      */
 
     } catch (err) {
       // Si hay un error, lo guardamos en el estado para mostrarlo al usuario.

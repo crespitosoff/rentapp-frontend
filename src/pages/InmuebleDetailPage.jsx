@@ -1,6 +1,6 @@
-import { useState, useEffect, useContext } from 'react'; // Importa useContext
-import { useParams } from 'react-router-dom'; // <-- Importante: Hook para leer parámetros de la URL
-import { AuthContext } from '../context/AuthContext'; // <-- Importa AuthContext
+import { useState, useEffect, useContext } from 'react';
+import { useParams, useNavigate } from 'react-router-dom'; // Importa useNavigate
+import { AuthContext } from '../context/AuthContext';
 
 function InmuebleDetailPage() {
   // 1. useParams() nos da un objeto con los parámetros de la URL.
@@ -9,9 +9,13 @@ function InmuebleDetailPage() {
   const [inmueble, setInmueble] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { token, rol } = useContext(AuthContext); // <-- Obtén token y rol
+
+  // 2. Obtenemos todo lo del contexto
+  const { token, rol, favoritos, addFavorito, removeFavorito } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    // ... (tu fetchInmueble no cambia)
     const fetchInmueble = async () => {
       try {
         const response = await fetch(`http://localhost:3000/api/inmuebles/${id}`);
@@ -25,30 +29,10 @@ function InmuebleDetailPage() {
     fetchInmueble();
   }, [id]); // <-- Se ejecuta cada vez que el 'id' de la URL cambie
 
-  // --- NUEVA FUNCIÓN PARA GUARDAR FAVORITO ---
-  const handleSaveFavorite = async () => {
-    if (!token) {
-      alert('Por favor, inicia sesión para guardar favoritos.');
-      return;
-    }
-    try {
-      const response = await fetch('http://localhost:3000/api/favoritos', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ inmueble_id: id })
-      });
-      if (!response.ok) { throw new Error('No se pudo guardar el favorito'); }
-      alert('¡Guardado en favoritos!');
-    } catch (err) {
-      alert(err.message);
-    }
-  };
+  // 3. ¡ELIMINAMOS handleSaveFavorite! Ya no se necesita.
 
   if (loading) {
-    return <div>Cargando...</div>;
+    return <div>Cargando inmueble...</div>;
   }
 
   if (error) {
@@ -59,21 +43,40 @@ function InmuebleDetailPage() {
     return <div>Inmueble no encontrado.</div>;
   }
 
+  // 4. LÓGICA DEL BOTÓN INTELIGENTE
+  const isFavorito = favoritos.find(fav => fav.inmueble_id === inmueble.inmueble_id);
+
+  const handleFavClick = () => {
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+    if (isFavorito) {
+      removeFavorito(inmueble.inmueble_id);
+    } else {
+      addFavorito(inmueble);
+    }
+  };
+
   // Mostramos los detalles del inmueble
   return (
     <div>
       <h1>{inmueble.titulo}</h1>
 
-      {/* --- BOTÓN DE GUARDAR --- */}
-      {/* Solo mostramos el botón si es 'arrendatario' */}
-      {rol === 'arrendatario' && (
-        <button onClick={handleSaveFavorite} style={{ marginBottom: '1rem' }}>
-          Guardar en Favoritos
+      {/* --- 5. LÓGICA DE MOSTRAR BOTÓN --- */}
+      {rol !== 'arrendador' && (
+        <button
+          onClick={handleFavClick}
+          style={{
+            marginBottom: '1rem',
+            backgroundColor: isFavorito ? '#aa2a2a' : ''
+          }}
+        >
+          {isFavorito ? 'Quitar de Favoritos' : 'Guardar en Favoritos'}
         </button>
       )}
 
-      {/* --- ARREGLO DE CAMPOS --- */}
-      {/* Eliminamos 'descripcion_larga' (no existe), 'num_habitaciones' y 'num_baños' */}
+      {/* --- ARREGLO DE CAMPOS (sin cambios) --- */}
       <p>{inmueble.descripcion}</p>
       <p><strong>Dirección:</strong> {inmueble.direccion}</p>
       <p><strong>Precio:</strong> ${inmueble.precio_mensual} / mes</p>
