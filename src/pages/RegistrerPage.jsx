@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+// 1. Importa los nuevos estilos
+import styles from '../styles/Forms.module.css';
 
 function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -50,40 +52,39 @@ function RegisterPage() {
     }
   };
 
+  // 2. Aplicamos los estilos al JSX
   return (
-    <div>
-      <h2>Crear Cuenta</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Nombre:</label>
-          <input type="text" name="primer_nombre" onChange={handleChange} required />
+    <div className={styles.formWrapper}>
+      <h2 className={styles.formTitle}>Crear Cuenta</h2>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Nombre:</label>
+          <input type="text" name="primer_nombre" onChange={handleChange} className={styles.formInput} required />
         </div>
-        <div>
-          <label>Apellido:</label>
-          <input type="text" name="primer_apellido" onChange={handleChange} required />
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Apellido:</label>
+          <input type="text" name="primer_apellido" onChange={handleChange} className={styles.formInput} required />
         </div>
-        <div>
-          <label>Email:</label>
-          <input type="email" name="email" onChange={handleChange} required />
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Email:</label>
+          <input type="email" name="email" onChange={handleChange} className={styles.formInput} required />
         </div>
-        <div>
-          <label>Contraseña:</label>
-          <input type="password" name="password" onChange={handleChange} required />
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Contraseña:</label>
+          <input type="password" name="password" onChange={handleChange} className={styles.formInput} required />
         </div>
 
-        {/* --- ÚNICO CAMBIO (AÑADIR SELECTOR DE ROL) --- */}
-        <div>
-          <label>Quiero registrarme como:</label>
-          <select name="rol" value={formData.rol} onChange={handleChange}>
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Quiero registrarme como:</label>
+          <select name="rol" value={formData.rol} onChange={handleChange} className={styles.formInput}>
             <option value="arrendatario">Inquilino (Busco arriendo)</option>
             <option value="arrendador">Propietario (Ofrezco arriendo)</option>
           </select>
         </div>
-        {/* --- FIN DEL CAMBIO --- */}
 
-        <button type="submit">Registrarse</button>
+        {error && <p className={styles.formError}>{error}</p>}
+        <button type="submit" className={styles.formButton}>Registrarse</button>
       </form>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   );
 }

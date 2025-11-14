@@ -1,6 +1,8 @@
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+// 1. Importa los nuevos estilos
+import styles from '../styles/Forms.module.css';
 
 function LoginPage() {
   // 1. Creamos estados para guardar el email y la contraseña que el usuario escribe.
@@ -44,33 +46,36 @@ function LoginPage() {
     }
   };
 
+  // 2. Aplicamos los estilos al JSX
   return (
-    <div>
-      <h2>Iniciar Sesión</h2>
-      {/* 5. Estructura del formulario en JSX */}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email:</label>
+    <div className={styles.formWrapper}>
+      <h2 className={styles.formTitle}>Iniciar Sesión</h2>
+
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Email:</label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className={styles.formInput}
             required
           />
         </div>
-        <div>
-          <label>Contraseña:</label>
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Contraseña:</label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className={styles.formInput}
             required
           />
         </div>
-        <button type="submit">Iniciar Sesión</button>
+        {/* Mostramos el mensaje de error si existe */}
+        {error && <p className={styles.formError}>{error}</p>}
+        <button type="submit" className={styles.formButton}>Iniciar Sesión</button>
       </form>
-      {/* Mostramos el mensaje de error si existe */}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   );
 }

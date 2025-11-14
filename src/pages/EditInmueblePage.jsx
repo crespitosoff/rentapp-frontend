@@ -3,6 +3,8 @@
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+// 1. Importa los nuevos estilos
+import styles from '../styles/Forms.module.css';
 
 function EditInmueblePage() {
     // 1. Hooks necesarios
@@ -94,37 +96,38 @@ function EditInmueblePage() {
         return <div>Cargando datos del inmueble...</div>;
     }
 
+    // 2. Aplicamos los estilos al JSX
     return (
-        <div>
-            <h2>Editar Inmueble</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Título:</label>
-                    <input type="text" name="titulo" value={formData.titulo} onChange={handleChange} required />
+        <div className={styles.formWrapper}>
+            <h2 className={styles.formTitle}>Editar Inmueble</h2>
+            <form onSubmit={handleSubmit} className={styles.form}>
+                <div className={styles.formGroup}>
+                    <label className={styles.formLabel}>Título:</label>
+                    <input type="text" name="titulo" value={formData.titulo} onChange={handleChange} className={styles.formInput} required />
                 </div>
-                <div>
-                    <label>Descripción:</label>
-                    <textarea name="descripcion" value={formData.descripcion} onChange={handleChange}></textarea>
+                <div className={styles.formGroup}>
+                    <label className={styles.formLabel}>Descripción:</label>
+                    <textarea name="descripcion" value={formData.descripcion} onChange={handleChange} className={styles.formInput}></textarea>
                 </div>
-                <div>
-                    <label>Dirección:</label>
-                    <input type="text" name="direccion" value={formData.direccion} onChange={handleChange} required />
+                <div className={styles.formGroup}>
+                    <label className={styles.formLabel}>Dirección:</label>
+                    <input type="text" name="direccion" value={formData.direccion} onChange={handleChange} className={styles.formInput} required />
                 </div>
-                <div>
-                    <label>Precio Mensual (COP):</label>
-                    <input type="number" name="precio_mensual" value={formData.precio_mensual} onChange={handleChange} required />
+                <div className={styles.formGroup}>
+                    <label className={styles.formLabel}>Precio Mensual (COP):</label>
+                    <input type="number" name="precio_mensual" value={formData.precio_mensual} onChange={handleChange} className={styles.formInput} required />
                 </div>
-                <div>
-                    <label>Estado:</label>
-                    <select name="disponible" value={formData.disponible} onChange={handleChange}>
-                        <option value="true">Disponible</option>
-                        <option value="false">Alquilado (No Disponible)</option>
+                <div className={styles.formGroup}>
+                    <label className={styles.formLabel}>Estado:</label>
+                    <select name="disponible" value={formData.disponible} onChange={handleChange} className={styles.formInput}>
+                        <option value={true}>Disponible</option>
+                        <option value={false}>Alquilado (No Disponible)</option>
                     </select>
                 </div>
 
-                <button type="submit">Actualizar Inmueble</button>
+                {error && <p className={styles.formError}>{error}</p>}
+                <button type="submit" className={styles.formButton}>Actualizar Inmueble</button>
             </form>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
         </div>
     );
 }

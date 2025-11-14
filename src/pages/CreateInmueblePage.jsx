@@ -3,6 +3,8 @@
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+// 1. Importa los nuevos estilos
+import styles from '../styles/Forms.module.css';
 
 function CreateInmueblePage() {
   const { token } = useContext(AuthContext);
@@ -61,8 +63,6 @@ function CreateInmueblePage() {
       const response = await fetch('http://localhost:3000/api/inmuebles', {
         method: 'POST',
         headers: {
-          // NO pongas 'Content-Type': 'application/json'
-          // El navegador lo pondrá como 'multipart/form-data' automáticamente
           'Authorization': `Bearer ${token}`
         },
         body: dataToSend, // Enviamos el objeto FormData
@@ -81,36 +81,35 @@ function CreateInmueblePage() {
     }
   };
 
-  // 10. El formulario AHORA incluye un input type="file"
+  // 2. Aplicamos los estilos al JSX
   return (
-    <div>
-      <h2>Publicar un Nuevo Inmueble</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Título:</label>
-          <input type="text" name="titulo" onChange={handleChange} required />
+    <div className={styles.formWrapper}>
+      <h2 className={styles.formTitle}>Publicar un Nuevo Inmueble</h2>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Título:</label>
+          <input type="text" name="titulo" onChange={handleChange} className={styles.formInput} required />
         </div>
-        <div>
-          <label>Descripción:</label>
-          <textarea name="descripcion" onChange={handleChange}></textarea>
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Descripción:</label>
+          <textarea name="descripcion" onChange={handleChange} className={styles.formInput}></textarea>
         </div>
-        <div>
-          <label>Dirección:</label>
-          <input type="text" name="direccion" onChange={handleChange} required />
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Dirección:</label>
+          <input type="text" name="direccion" onChange={handleChange} className={styles.formInput} required />
         </div>
-        <div>
-          <label>Precio Mensual (COP):</label>
-          <input type="number" name="precio_mensual" onChange={handleChange} required />
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Precio Mensual (COP):</label>
+          <input type="number" name="precio_mensual" onChange={handleChange} className={styles.formInput} required />
         </div>
-        {/* --- NUEVO CAMPO DE IMAGEN --- */}
-        <div>
-          <label>Imagen Principal:</label>
-          <input type="file" name="imagen" onChange={handleImageChange} accept="image/*" required />
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Imagen Principal:</label>
+          <input type="file" name="imagen" onChange={handleImageChange} className={styles.formInput} accept="image/*" required />
         </div>
 
-        <button type="submit">Publicar Inmueble</button>
+        {error && <p className={styles.formError}>{error}</p>}
+        <button type="submit" className={styles.formButton}>Publicar Inmueble</button>
       </form>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   );
 }
