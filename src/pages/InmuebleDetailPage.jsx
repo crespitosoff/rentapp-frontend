@@ -1,6 +1,8 @@
 import { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+// 1. Importa el nuevo Módulo de CSS
+import styles from './InmuebleDetailPage.module.css';
 
 function InmuebleDetailPage() {
   const { id } = useParams();
@@ -44,39 +46,46 @@ function InmuebleDetailPage() {
   };
 
   // Mostramos los detalles del inmueble
+  // 2. Aplicamos las nuevas clases de CSS
   return (
-    <div>
-      {/* --- NUEVA SECCIÓN DE IMAGEN --- */}
-      {inmueble.fotos && inmueble.fotos.length > 0 && (
-        <div className="inmueble-images">
+    <div className={styles.detailWrapper}>
+      {/* --- SECCIÓN DE IMAGEN ACTUALIZADA --- */}
+      {inmueble.fotos && inmueble.fotos.length > 0 ? (
+        <div className={styles.imageContainer}>
           {/* Por ahora solo mostramos la primera foto */}
           <img
             src={inmueble.fotos[0].url_imagen}
             alt={inmueble.titulo}
-            style={{ width: '100%', height: 'auto', borderRadius: '8px' }}
+            className={styles.detailImage} // <-- Usamos la clase
           />
-          {/* (En el futuro, aquí podríamos mapear 'inmueble.fotos' para crear una galería) */}
         </div>
+      ) : (
+        <div className={styles.imageContainer}></div> // Placeholder si no hay foto
       )}
 
-      <h1>{inmueble.titulo}</h1>
+      <div className={styles.contentWrapper}>
+        <div className={styles.header}>
+          <h1 className={styles.detailTitle}>{inmueble.titulo}</h1>
+          {rol !== 'arrendador' && (
+            <button
+              onClick={handleFavClick}
+              style={{
+                // (Dejamos este estilo en línea ya que es dinámico)
+                backgroundColor: isFavorito ? '#aa2a2a' : ''
+              }}
+            >
+              {isFavorito ? 'Quitar de Favoritos' : 'Guardar en Favoritos'}
+            </button>
+          )}
+        </div>
 
-      {rol !== 'arrendador' && (
-        <button
-          onClick={handleFavClick}
-          style={{
-            marginBottom: '1rem',
-            backgroundColor: isFavorito ? '#aa2a2a' : ''
-          }}
-        >
-          {isFavorito ? 'Quitar de Favoritos' : 'Guardar en Favoritos'}
-        </button>
-      )}
-
-      <p>{inmueble.descripcion}</p>
-      <p><strong>Dirección:</strong> {inmueble.direccion}</p>
-      <p><strong>Precio:</strong> ${inmueble.precio_mensual} / mes</p>
-      <p><strong>Estado:</strong> {inmueble.disponible ? 'Disponible' : 'Alquilado'}</p>
+        <div className={styles.detailSection}>
+          <p>{inmueble.descripcion}</p>
+          <p><strong>Dirección:</strong> {inmueble.direccion}</p>
+          <p><strong>Estado:</strong> {inmueble.disponible ? 'Disponible' : 'Alquilado'}</p>
+          <p className={styles.detailPrice}>${inmueble.precio_mensual} / mes</p>
+        </div>
+      </div>
     </div>
   );
 }

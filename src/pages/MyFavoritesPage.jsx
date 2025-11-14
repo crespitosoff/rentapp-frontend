@@ -1,10 +1,10 @@
 // src/pages/MyFavoritesPage.jsx
 
-import { useContext } from 'react'; // <-- Importa solo lo que necesitas
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 // Reutilizamos los estilos que ya creamos para la Home Page
-import styles from './HomePage.module.css';
+import styles from './HomePage.module.css'; // (Este ya tiene las clases que necesitamos)
 
 function MyFavoritesPage() {
     // 1. Obtenemos TODO del cerebro (AuthContext)
@@ -25,7 +25,17 @@ function MyFavoritesPage() {
                     {favoritos.map(inmueble => (
                         <div key={inmueble.inmueble_id} className={styles.card}>
                             <Link to={`/inmueble/${inmueble.inmueble_id}`} className={styles.cardLink}>
-                                <div className={styles.cardImage}>{/* Placeholder */}</div>
+
+                                {/* --- INICIO DEL ARREGLO --- */}
+                                <div className={styles.cardImageContainer}>
+                                    {inmueble.url_imagen ? (
+                                        <img src={inmueble.url_imagen} alt={inmueble.titulo} className={styles.cardImage} />
+                                    ) : (
+                                        <div className={styles.cardImagePlaceholder}></div>
+                                    )}
+                                </div>
+                                {/* --- FIN DEL ARREGLO --- */}
+
                                 <div className={styles.cardContent}>
                                     <h3>{inmueble.titulo}</h3>
                                     <p className={styles.price}>${inmueble.precio_mensual} / mes</p>

@@ -1,23 +1,24 @@
-/* El contenedor de la grilla de tarjetas */
+/* src/pages/HomePage.module.css */
+
 .inmueblesGrid {
     display: grid;
     /* Crea columnas automáticas: 
-     - Se ajustan al ancho (auto-fill)
-     - Cada tarjeta tiene un mínimo de 300px
-     - Ocupan el espacio restante (1fr)
-  */
+     - Se ajustan al ancho (auto-fill)
+     - Cada tarjeta tiene un mínimo de 300px
+     - Ocupan el espacio restante (1fr)
+  */
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.5rem;
     /* Espacio entre las tarjetas */
 }
 
-/* El Link que envuelve la tarjeta */
 .cardLink {
     text-decoration: none;
     color: inherit;
+    display: flex;
+    /* Para que el link ocupe todo el alto de la tarjeta */
 }
 
-/* La tarjeta individual */
 .card {
     background-color: var(--color-white);
     border-radius: 8px;
@@ -26,6 +27,11 @@
     overflow: hidden;
     /* Para que la imagen se ajuste a los bordes redondeados */
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    /* Asegura que el contenido esté debajo de la imagen */
+    width: 100%;
+    /* Asegura que la tarjeta llene el espacio del link */
 }
 
 .card:hover {
@@ -34,21 +40,67 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Un placeholder para la imagen del inmueble */
-.cardImage {
+/* --- ESTE ES EL CÓDIGO QUE FALTABA --- */
+
+/* Contenedor de la imagen (el que tenía el div gris) */
+.cardImageContainer {
+    position: relative;
+    /* Clave para posicionar el botón 'Guardar' */
+    width: 100%;
     height: 200px;
+    /* Altura fija para todas las imágenes */
     background-color: #eee;
-    /* Color de placeholder */
-    /* En el futuro, aquí pondríamos:
-   background-image: url(IMAGEN_DEL_INMUEBLE);
-   background-size: cover;
-   background-position: center;
-   */
+    /* Color de fondo si no hay imagen */
 }
 
-/* El contenido de texto de la tarjeta */
+/* La imagen real <img> */
+.cardImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Recorta la imagen para que llene el espacio, sin estirar */
+}
+
+/* El placeholder (si la url_imagen es nula) */
+.cardImagePlaceholder {
+    width: 100%;
+    height: 100%;
+    background-color: #eee;
+    /* El 'div' gris */
+}
+
+/* El botón "Guardar" que está sobre la imagen */
+.saveButton {
+    position: absolute;
+    /* Posiciona el botón SOBRE la imagen */
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 10;
+
+    /* Estilos del botón */
+    background-color: rgba(255, 255, 255, 0.9);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.saveButton:hover {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    border-color: var(--color-primary);
+}
+
+/* --- FIN DEL CÓDIGO QUE FALTABA --- */
+
 .cardContent {
     padding: 1rem;
+    flex-grow: 1;
+    /* Esto empuja el contenido hacia abajo y alinea los botones 'Quitar' en 'MisFavoritos' */
 }
 
 .cardContent h3 {
@@ -60,13 +112,11 @@
 .cardContent p {
     margin-bottom: 0.5rem;
     opacity: 0.8;
-    /* Hacemos la descripción un poco más sutil */
 }
 
 .cardContent .price {
     font-weight: 700;
     font-size: 1.1rem;
     color: var(--color-primary);
-    /* ¡Usamos nuestro color de marca! */
     margin-top: 1rem;
 }
