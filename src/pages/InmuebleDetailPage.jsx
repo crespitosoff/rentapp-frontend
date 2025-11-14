@@ -1,23 +1,19 @@
 import { useState, useEffect, useContext } from 'react';
-import { useParams, useNavigate } from 'react-router-dom'; // Importa useNavigate
+import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
 function InmuebleDetailPage() {
-  // 1. useParams() nos da un objeto con los parámetros de la URL.
-  //    Lo llamamos { id } porque en la ruta lo llamaremos ':id'
   const { id } = useParams();
   const [inmueble, setInmueble] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // 2. Obtenemos todo lo del contexto
   const { token, rol, favoritos, addFavorito, removeFavorito } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // ... (tu fetchInmueble no cambia)
     const fetchInmueble = async () => {
       try {
+        // Esta ruta ahora devuelve el inmueble con un array 'fotos'
         const response = await fetch(`http://localhost:3000/api/inmuebles/${id}`);
         if (!response.ok) { throw new Error('Inmueble no encontrado'); }
         const data = await response.json();
@@ -27,23 +23,12 @@ function InmuebleDetailPage() {
     };
 
     fetchInmueble();
-  }, [id]); // <-- Se ejecuta cada vez que el 'id' de la URL cambie
+  }, [id]);
 
-  // 3. ¡ELIMINAMOS handleSaveFavorite! Ya no se necesita.
+  if (loading) { return <div>Cargando inmueble...</div>; }
+  if (error) { return <div>Error: {error}</div>; }
+  if (!inmueble) { return <div>Inmueble no encontrado.</div>; }
 
-  if (loading) {
-    return <div>Cargando inmueble...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
-  if (!inmueble) {
-    return <div>Inmueble no encontrado.</div>;
-  }
-
-  // 4. LÓGICA DEL BOTÓN INTELIGENTE
   const isFavorito = favoritos.find(fav => fav.inmueble_id === inmueble.inmueble_id);
 
   const handleFavClick = () => {
@@ -61,9 +46,21 @@ function InmuebleDetailPage() {
   // Mostramos los detalles del inmueble
   return (
     <div>
+      {/* --- NUEVA SECCIÓN DE IMAGEN --- */}
+      {inmueble.fotos && inmueble.fotos.length > 0 && (
+        <div className="inmueble-images">
+          {/* Por ahora solo mostramos la primera foto */}
+          <img
+            src={inmueble.fotos[0].url_imagen}
+            alt={inmueble.titulo}
+            style={{ width: '100%', height: 'auto', borderRadius: '8px' }}
+          />
+          {/* (En el futuro, aquí podríamos mapear 'inmueble.fotos' para crear una galería) */}
+        </div>
+      )}
+
       <h1>{inmueble.titulo}</h1>
 
-      {/* --- 5. LÓGICA DE MOSTRAR BOTÓN --- */}
       {rol !== 'arrendador' && (
         <button
           onClick={handleFavClick}
@@ -76,7 +73,6 @@ function InmuebleDetailPage() {
         </button>
       )}
 
-      {/* --- ARREGLO DE CAMPOS (sin cambios) --- */}
       <p>{inmueble.descripcion}</p>
       <p><strong>Dirección:</strong> {inmueble.direccion}</p>
       <p><strong>Precio:</strong> ${inmueble.precio_mensual} / mes</p>

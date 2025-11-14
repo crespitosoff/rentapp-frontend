@@ -1,7 +1,7 @@
 // src/pages/HomePage.jsx
 
 import { useState, useEffect, useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // <-- 1. Importa useNavigate
+import { Link, useNavigate } from 'react-router-dom';
 import styles from './HomePage.module.css';
 import { AuthContext } from '../context/AuthContext';
 
@@ -9,8 +9,6 @@ function HomePage() {
   const [inmuebles, setInmuebles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // 2. Obtenemos todo lo que necesitamos del cerebro
   const {
     token,
     rol,
@@ -21,9 +19,9 @@ function HomePage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // ... (tu fetchInmuebles no cambia)
     const fetchInmuebles = async () => {
       try {
+        // Esta ruta ahora devuelve los inmuebles con 'url_imagen'
         const response = await fetch('http://localhost:3000/api/inmuebles');
         if (!response.ok) { throw new Error('La respuesta de la red no fue exitosa'); }
         const data = await response.json();
@@ -34,36 +32,27 @@ function HomePage() {
     fetchInmuebles();
   }, []);
 
-  // 3. ¡ELIMINAMOS handleSaveClick! Ya no se necesita.
-
-  if (loading) { /* ... */ }
-  if (error) { /* ... */ }
+  if (loading) { return <div>Cargando inmuebles...</div>; }
+  if (error) { return <div>Error al cargar los inmuebles: {error}</div>; }
 
   return (
     <div>
       <h1>Inmuebles Disponibles</h1>
       <div className={styles.inmueblesGrid}>
         {inmuebles.map(inmueble => {
-          // 4. LÓGICA DEL BOTÓN INTELIGENTE
-          // Comprueba si este inmueble YA está en la lista de favoritos del contexto
           const isFavorito = favoritos.find(fav => fav.inmueble_id === inmueble.inmueble_id);
 
-          // 5. Lógica del clic
           const handleFavClick = (e) => {
-            e.preventDefault(); // Detiene la navegación del Link
+            e.preventDefault();
             e.stopPropagation();
-
             if (!token) {
-              // ¡Tu idea! Incita al login
               navigate('/login');
               return;
             }
-
-            // Si ya es favorito, lo quita. Si no, lo añade.
             if (isFavorito) {
               removeFavorito(inmueble.inmueble_id);
             } else {
-              addFavorito(inmueble); // Pasamos el objeto 'inmueble' completo
+              addFavorito(inmueble);
             }
           };
 
@@ -74,14 +63,18 @@ function HomePage() {
               className={styles.cardLink}
             >
               <div className={styles.card}>
-                <div className={styles.cardImage}>
-                  {/* 6. LÓGICA DE MOSTRAR BOTÓN */}
-                  {/* Mostramos el botón si NO eres arrendador */}
+                <div className={styles.cardImageContainer}> {/* Contenedor para la imagen */}
+                  {/* --- CAMBIO PRINCIPAL --- */}
+                  {inmueble.url_imagen ? (
+                    <img src={inmueble.url_imagen} alt={inmueble.titulo} className={styles.cardImage} />
+                  ) : (
+                    <div className={styles.cardImagePlaceholder}></div>
+                  )}
+
                   {rol !== 'arrendador' && (
                     <button
                       className={styles.saveButton}
                       onClick={handleFavClick}
-                      // Cambiamos el estilo si es favorito
                       style={{ backgroundColor: isFavorito ? '#aa2a2a' : '' }}
                     >
                       {isFavorito ? 'Quitar' : 'Guardar'}

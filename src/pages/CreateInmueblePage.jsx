@@ -2,24 +2,24 @@
 
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext'; // <-- 1. Importa el contexto
+import { AuthContext } from '../context/AuthContext';
 
 function CreateInmueblePage() {
-  // 2. Trae el 'token' de tu contexto de autenticación
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // 3. Estado para manejar todos los campos del formulario
+  // 1. Estado para los campos de TEXTO
   const [formData, setFormData] = useState({
     titulo: '',
     descripcion: '',
     direccion: '',
     precio_mensual: '',
-    num_habitaciones: '',
-    num_baños: '',
   });
+  // 2. Estado SEPARADO para el ARCHIVO
+  const [imagen, setImagen] = useState(null);
   const [error, setError] = useState('');
 
+  // 3. Manejador para los campos de TEXTO
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -27,30 +27,53 @@ function CreateInmueblePage() {
     });
   };
 
+  // 4. Manejador para el campo de ARCHIVO
+  const handleImageChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setImagen(e.target.files[0]);
+    }
+  };
+
+  // 5. handleSubmit totalmente REESCRITO para FormData
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
+    if (!imagen) {
+      setError('Debes seleccionar una imagen para el inmueble.');
+      return;
+    }
+
+    // 6. Creamos un objeto FormData
+    const dataToSend = new FormData();
+
+    // 7. Añadimos todos los campos de texto
+    dataToSend.append('titulo', formData.titulo);
+    dataToSend.append('descripcion', formData.descripcion);
+    dataToSend.append('direccion', formData.direccion);
+    dataToSend.append('precio_mensual', formData.precio_mensual);
+
+    // 8. Añadimos el archivo. 'imagen' debe coincidir con upload.single('imagen') en la ruta
+    dataToSend.append('imagen', imagen);
+
     try {
-      // ¡LA LLAMADA SEGURA A LA API!
+      // 9. Hacemos el fetch con FormData
       const response = await fetch('http://localhost:3000/api/inmuebles', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          // Enviamos el token para la autenticación
+          // NO pongas 'Content-Type': 'application/json'
+          // El navegador lo pondrá como 'multipart/form-data' automáticamente
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(formData),
+        body: dataToSend, // Enviamos el objeto FormData
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        // El backend nos enviará un 403 (Prohibido) si el token es de un 'arrendatario'
         throw new Error(data.message || 'Error al crear el inmueble');
       }
 
-      // 5. Si todo sale bien, redirige a la página de inicio (o a la del nuevo inmueble)
       navigate('/');
 
     } catch (err) {
@@ -58,14 +81,14 @@ function CreateInmueblePage() {
     }
   };
 
-  // 6. El formulario (puedes añadir más campos)
+  // 10. El formulario AHORA incluye un input type="file"
   return (
     <div>
       <h2>Publicar un Nuevo Inmueble</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label>Título:</label>
-          <input type-="text" name="titulo" onChange={handleChange} required />
+          <input type="text" name="titulo" onChange={handleChange} required />
         </div>
         <div>
           <label>Descripción:</label>
@@ -78,6 +101,11 @@ function CreateInmueblePage() {
         <div>
           <label>Precio Mensual (COP):</label>
           <input type="number" name="precio_mensual" onChange={handleChange} required />
+        </div>
+        {/* --- NUEVO CAMPO DE IMAGEN --- */}
+        <div>
+          <label>Imagen Principal:</label>
+          <input type="file" name="imagen" onChange={handleImageChange} accept="image/*" required />
         </div>
 
         <button type="submit">Publicar Inmueble</button>
