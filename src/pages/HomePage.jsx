@@ -1,5 +1,3 @@
-// src/pages/HomePage.jsx
-
 import { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './HomePage.module.css';
@@ -9,6 +7,9 @@ function HomePage() {
   const [inmuebles, setInmuebles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  // --- ESTADO PARA LA BÚSQUEDA ---
+  const [searchTerm, setSearchTerm] = useState('');
+
   const {
     token,
     rol,
@@ -18,26 +19,60 @@ function HomePage() {
   } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  // Función para cargar inmuebles (ahora acepta un término de búsqueda opcional)
+  const fetchInmuebles = async (query = '') => {
+    setLoading(true);
+    try {
+      // Construimos la URL con el parámetro de búsqueda si existe
+      let url = 'http://localhost:3000/api/inmuebles';
+      if (query) {
+        url += `?q=${query}`;
+      }
+
+      const response = await fetch(url);
+      if (!response.ok) { throw new Error('La respuesta de la red no fue exitosa'); }
+      const data = await response.json();
+      setInmuebles(data);
+    } catch (err) { setError(err.message); }
+    finally { setLoading(false); }
+  };
+
+  // Carga inicial (sin búsqueda)
   useEffect(() => {
-    const fetchInmuebles = async () => {
-      try {
-        // Esta ruta ahora devuelve los inmuebles con 'url_imagen'
-        const response = await fetch('http://localhost:3000/api/inmuebles');
-        if (!response.ok) { throw new Error('La respuesta de la red no fue exitosa'); }
-        const data = await response.json();
-        setInmuebles(data);
-      } catch (err) { setError(err.message); }
-      finally { setLoading(false); }
-    };
     fetchInmuebles();
   }, []);
 
-  if (loading) { return <div>Cargando inmuebles...</div>; }
+  // Manejador del formulario de búsqueda
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    fetchInmuebles(searchTerm);
+  };
+
+  if (loading && inmuebles.length === 0) { return <div>Cargando inmuebles...</div>; }
   if (error) { return <div>Error al cargar los inmuebles: {error}</div>; }
 
   return (
     <div>
-      <h1>Inmuebles Disponibles</h1>
+      {/* --- SECCIÓN DE BÚSQUEDA --- */}
+      <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        <h1>Encuentra tu espacio ideal</h1>
+        <form onSubmit={handleSearchSubmit} className={styles.searchContainer}>
+          <input
+            type="text"
+            placeholder="Buscar por título, dirección..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className={styles.searchInput}
+          />
+          <button type="submit" className={styles.searchButton}>Buscar</button>
+        </form>
+      </div>
+
+      {/* Mensaje si no hay resultados */}
+      {!loading && inmuebles.length === 0 && (
+        <p style={{ textAlign: 'center' }}>No se encontraron inmuebles que coincidan con tu búsqueda.</p>
+      )}
+
       <div className={styles.inmueblesGrid}>
         {inmuebles.map(inmueble => {
           const isFavorito = favoritos.find(fav => fav.inmueble_id === inmueble.inmueble_id);
@@ -63,8 +98,12 @@ function HomePage() {
               className={styles.cardLink}
             >
               <div className={styles.card}>
-                <div className={styles.cardImageContainer}> {/* Contenedor para la imagen */}
-                  {/* --- CAMBIO PRINCIPAL --- */}
+                <div className={styles.cardImageContainer}>
+                  {/* --- ETIQUETA DE DESTACADO --- */}
+                  {inmueble.es_destacado && (
+                    <span className={styles.featuredBadge}>Destacado</span>
+                  )}
+
                   {inmueble.url_imagen ? (
                     <img src={inmueble.url_imagen} alt={inmueble.titulo} className={styles.cardImage} />
                   ) : (
@@ -73,9 +112,8 @@ function HomePage() {
 
                   {rol !== 'arrendador' && (
                     <button
-                      className={styles.saveButton}
+                      className={isFavorito ? styles.saveButtonRemove : styles.saveButton}
                       onClick={handleFavClick}
-                      style={{ backgroundColor: isFavorito ? '#aa2a2a' : '' }}
                     >
                       {isFavorito ? 'Quitar' : 'Guardar'}
                     </button>
