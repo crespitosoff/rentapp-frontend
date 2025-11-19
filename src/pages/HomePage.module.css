@@ -120,3 +120,178 @@
     color: var(--color-primary);
     margin-top: 1rem;
 }
+
+/* --- BARRA DE BÚSQUEDA --- */
+.searchContainer {
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.searchInput {
+    flex-grow: 1;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 50px;
+    /* Redondeado */
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.searchInput:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(240, 116, 39, 0.1);
+}
+
+.searchButton {
+    background-color: var(--color-text);
+    /* Negro/Gris oscuro */
+    color: white;
+    border: none;
+    padding: 0 1.5rem;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+.searchButton:hover {
+    background-color: #000;
+}
+
+/* --- ETIQUETA DE DESTACADO --- */
+.featuredBadge {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    /* A la izquierda, opuesto al botón de guardar */
+    background-color: #f1c40f;
+    /* Amarillo dorado */
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* ... (El resto de tus estilos: inmueblesGrid, cardLink, card, etc. SIGUEN IGUAL) ... */
+.inmueblesGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.cardLink {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+}
+
+.card {
+    background-color: var(--color-white);
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.cardImageContainer {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    background-color: #eee;
+}
+
+.cardImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cardImagePlaceholder {
+    width: 100%;
+    height: 100%;
+    background-color: #eee;
+}
+
+.saveButton {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 10;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.saveButton:hover {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    border-color: var(--color-primary);
+}
+
+.saveButtonRemove {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 10;
+    background-color: #aa2a2a;
+    color: var(--color-white);
+    border: 1px solid #aa2a2a;
+    border-radius: 20px;
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.saveButtonRemove:hover {
+    background-color: #881a1a;
+    border-color: #881a1a;
+}
+
+.cardContent {
+    padding: 1rem;
+    flex-grow: 1;
+}
+
+.cardContent h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+}
+
+.cardContent p {
+    margin-bottom: 0.5rem;
+    opacity: 0.8;
+}
+
+.cardContent .price {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--color-primary);
+    margin-top: 1rem;
+}
