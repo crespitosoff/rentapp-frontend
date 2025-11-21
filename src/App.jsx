@@ -1,7 +1,8 @@
 import { Link, Outlet } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from './context/AuthContext';
-import styles from './App.module.css'; // <-- 1. Importa el Módulo de CSS
+import styles from './App.module.css';
+import Footer from './components/Footer';
 
 function App() {
   //OBTÉN el token y la función logout del contexto
@@ -17,7 +18,7 @@ function App() {
 
         {/* 5. Añadimos un Logo/Título */}
         <Link to="/" className={styles.navLogo}>
-          RentApp
+          <img src="/logo.png" alt="RentApp Logo" style={{ height: '3rem' }} />
         </Link>
 
         {/* 6. Agrupamos los enlaces */}
@@ -55,6 +56,7 @@ function App() {
       <main className={styles.mainContent}> {/* 7. Usa la clase del contenido */}
         <Outlet /> {/* <-- Aquí se renderizarán HomePage, LoginPage, etc. */}
       </main>
+      <Footer />
     </div>
   );
 }
