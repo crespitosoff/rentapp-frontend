@@ -25,8 +25,6 @@ function MyFavoritesPage() {
                     {favoritos.map(inmueble => (
                         <div key={inmueble.inmueble_id} className={styles.card}>
                             <Link to={`/inmueble/${inmueble.inmueble_id}`} className={styles.cardLink}>
-
-                                {/* --- INICIO DEL ARREGLO --- */}
                                 <div className={styles.cardImageContainer}>
                                     {inmueble.url_imagen ? (
                                         <img src={inmueble.url_imagen} alt={inmueble.titulo} className={styles.cardImage} />
@@ -34,15 +32,12 @@ function MyFavoritesPage() {
                                         <div className={styles.cardImagePlaceholder}></div>
                                     )}
                                 </div>
-                                {/* --- FIN DEL ARREGLO --- */}
-
                                 <div className={styles.cardContent}>
                                     <h3>{inmueble.titulo}</h3>
                                     <p className={styles.price}>${inmueble.precio_mensual} / mes</p>
                                 </div>
                             </Link>
-                            <button
-                                // 4. Usamos la función 'removeFavorito' del contexto
+                            <button 
                                 onClick={() => removeFavorito(inmueble.inmueble_id)}
                                 style={{ margin: '1rem', width: 'calc(100% - 2rem)', backgroundColor: '#aa2a2a' }}
                             >

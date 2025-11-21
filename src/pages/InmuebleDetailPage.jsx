@@ -68,13 +68,10 @@ function InmuebleDetailPage() {
           <h1 className={styles.detailTitle}>{inmueble.titulo}</h1>
           {rol !== 'arrendador' && (
             <button
+              className={isFavorito ? styles.saveButtonRemove : styles.saveButton}
               onClick={handleFavClick}
-              style={{
-                // (Dejamos este estilo en línea ya que es dinámico)
-                backgroundColor: isFavorito ? '#aa2a2a' : ''
-              }}
             >
-              {isFavorito ? 'Quitar de Favoritos' : 'Guardar en Favoritos'}
+              {isFavorito ? 'Quitar' : 'Guardar'}
             </button>
           )}
         </div>

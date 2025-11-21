@@ -7,7 +7,6 @@ function HomePage() {
   const [inmuebles, setInmuebles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  // --- ESTADO PARA LA BÚSQUEDA ---
   const [searchTerm, setSearchTerm] = useState('');
 
   const {
