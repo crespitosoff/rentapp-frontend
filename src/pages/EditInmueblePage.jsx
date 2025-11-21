@@ -18,7 +18,9 @@ function EditInmueblePage() {
         descripcion: '',
         precio_mensual: '',
         direccion: '',
-        disponible: true // Asumimos un valor por defecto
+        disponible: true, // Asumimos un valor por defecto
+        es_destacado: false
+
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -40,7 +42,8 @@ function EditInmueblePage() {
                     descripcion: data.descripcion,
                     precio_mensual: data.precio_mensual,
                     direccion: data.direccion,
-                    disponible: data.disponible // ¡Este campo lo vimos en tu controller!
+                    disponible: data.disponible,
+                    es_destacado: data.es_destacado || false
                 });
 
             } catch (err) {
@@ -124,7 +127,19 @@ function EditInmueblePage() {
                         <option value={false}>Alquilado (No Disponible)</option>
                     </select>
                 </div>
-
+                <div className={styles.formGroup} style={{ flexDirection: 'row', alignItems: 'center', gap: '0.5rem' }}>
+                  <input 
+                    type="checkbox" 
+                    name="es_destacado" 
+                    checked={formData.es_destacado} 
+                    onChange={handleChange} 
+                    id="destacadoCheck"
+                    style={{ width: '20px', height: '20px' }}
+                  />
+                  <label htmlFor="destacadoCheck" className={styles.formLabel} style={{ cursor: 'pointer' }}>
+                    Destacar inmueble
+                  </label>
+                </div>
                 {error && <p className={styles.formError}>{error}</p>}
                 <button type="submit" className={styles.formButton}>Actualizar Inmueble</button>
             </form>

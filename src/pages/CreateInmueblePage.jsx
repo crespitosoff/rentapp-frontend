@@ -16,6 +16,7 @@ function CreateInmueblePage() {
     descripcion: '',
     direccion: '',
     precio_mensual: '',
+    es_destacado: false
   });
   // 2. Estado SEPARADO para el ARCHIVO
   const [imagen, setImagen] = useState(null);
@@ -25,7 +26,7 @@ function CreateInmueblePage() {
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: type === 'checkbox' ? checked : value,
     });
   };
 
@@ -106,7 +107,19 @@ function CreateInmueblePage() {
           <label className={styles.formLabel}>Imagen Principal:</label>
           <input type="file" name="imagen" onChange={handleImageChange} className={styles.formInput} accept="image/*" required />
         </div>
-
+        <div className={styles.formGroup} style={{ flexDirection: 'row', alignItems: 'center', gap: '0.5rem' }}>
+          <input 
+            type="checkbox" 
+            name="es_destacado" 
+            checked={formData.es_destacado} 
+            onChange={handleChange} 
+            id="destacadoCheck"
+            style={{ width: '20px', height: '20px' }}
+          />
+          <label htmlFor="destacadoCheck" className={styles.formLabel} style={{ cursor: 'pointer' }}>
+            Destacar este inmueble (¡Aparecerá primero!)
+          </label>
+        </div>
         {error && <p className={styles.formError}>{error}</p>}
         <button type="submit" className={styles.formButton}>Publicar Inmueble</button>
       </form>
