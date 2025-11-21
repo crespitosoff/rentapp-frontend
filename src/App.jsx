@@ -39,12 +39,12 @@ function App() {
                 <Link to="/mis-favoritos">Mis Favoritos</Link>
               )}
 
-              <button onClick={logout}>Logout</button>
+              <button onClick={logout}>Cerrar Sesión</button>
             </>
           ) : (
             // --- USUARIO DESCONECTADO ---
             <>
-              <Link to="/login">Login</Link>
+              <Link to="/login">Iniciar Sesión</Link>
               <Link to="/register">Registrarse</Link>
             </>
           )}
